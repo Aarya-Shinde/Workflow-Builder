@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import API_BASE from '../api'
 
 const STEP_LABELS = {
   clean: 'Clean Text',
@@ -13,7 +14,7 @@ export default function History() {
   const [expanded, setExpanded] = useState(null)
 
   useEffect(() => {
-    axios.get('/api/runs').then(res => setRuns(res.data))
+    axios.get(`${API_BASE}/api/runs`).then(res => setRuns(res.data))
   }, [])
 
   return (

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import API_BASE from '../api'
 
 export default function Health() {
   const [health, setHealth] = useState(null)
@@ -8,7 +9,7 @@ export default function Health() {
   async function fetchHealth() {
     setLoading(true)
     try {
-      const res = await axios.get('/health')
+      const res = await axios.get(`${API_BASE}/health`)
       setHealth(res.data)
     } catch {
       setHealth({ backend: 'error', mongodb: 'error', llm: 'error' })

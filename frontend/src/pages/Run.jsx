@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import API_BASE from '../api'
 
 const STEP_LABELS = {
   clean: 'Clean Text',
@@ -17,7 +18,7 @@ export default function Run() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    axios.get('/api/workflows').then(res => setWorkflows(res.data))
+    axios.get(`${API_BASE}/api/workflows`).then(res => setWorkflows(res.data))
   }, [])
 
   async function handleRun() {
@@ -27,7 +28,7 @@ export default function Run() {
     setResult(null)
     setLoading(true)
     try {
-      const res = await axios.post('/api/runs/execute', {
+      const res = await axios.post(`${API_BASE}/api/runs/execute`, {
         workflowId: selectedId,
         input
       })

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import API_BASE from '../api'
 
 const STEP_OPTIONS = [
   { key: 'clean', label: 'Clean Text' },
@@ -18,7 +19,7 @@ export default function Builder() {
   useEffect(() => { fetchWorkflows() }, [])
 
   async function fetchWorkflows() {
-    const res = await axios.get('/api/workflows')
+    const res = await axios.get(`${API_BASE}/api/workflows`) //axios.get('/api/workflows')
     setWorkflows(res.data)
   }
 
@@ -35,7 +36,7 @@ export default function Builder() {
     if (steps.length < 2) return setMessage('Select at least 2 steps')
     setLoading(true)
     try {
-      await axios.post('/api/workflows', { name, steps })
+      await axios.post(`${API_BASE}/api/workflows`, { name, steps }) //axios.post('/api/workflows', { name, steps })
       setMessage('Workflow saved!')
       setName('')
       setSteps([])
@@ -47,7 +48,7 @@ export default function Builder() {
   }
 
   async function handleDelete(id) {
-    await axios.delete(`/api/workflows/${id}`)
+    await axios.delete(`${API_BASE}/api/workflows/${id}`) //axios.delete(`/api/workflows/${id}`)
     fetchWorkflows()
   }
 
