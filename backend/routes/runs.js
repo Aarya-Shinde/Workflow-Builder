@@ -17,7 +17,7 @@ async function callGemini(prompt, retries = 3, delay = 1000) {
       await new Promise(res => setTimeout(res, delay));
 
       const response = await axios.post(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
         {
           contents: [
             {
