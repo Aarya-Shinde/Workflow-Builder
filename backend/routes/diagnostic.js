@@ -6,24 +6,40 @@ router.get('/test-gemini', async (req, res) => {
   try {
     console.log('Testing Gemini API...');
     console.log('API Key exists:', !!process.env.GEMINI_API_KEY);
-    console.log('API Key length:', process.env.GEMINI_API_KEY?.length);
 
-    // Test 1: List available models
-    console.log('Attempting to list models...');
+    // List available models
+    console.log('Listing available models...');
     const modelsResponse = await axios.get(
       `https://generativelanguage.googleapis.com/v1beta/models?key=${process.env.GEMINI_API_KEY}`
     );
 
-    const availableModels = modelsResponse.data.models
-      .filter(m => m.supportedGenerationMethods?.includes('generateContent'))
-      .map(m => m.name);
+    const allModels = modelsResponse.data.models.map(m => ({
+      name: m.name,
+      displayName: m.displayName,
+      supportsGenerateContent: m.supportedGenerationMethods?.includes('generateContent') || false
+    }));
 
-    console.log('Available models:', availableModels);
+    const availableModels = allModels.filter(m => m.supportsGenerateContent);
 
-    // Test 2: Try a simple API call with gemini-1.5-flash
-    console.log('Testing gemini-1.5-flash...');
+    console.log('All models:', allModels);
+    console.log('Available for generateContent:', availableModels);
+
+    // Try first available model
+    if (availableModels.length === 0) {
+      return res.json({
+        status: 'error',
+        error: 'No models available for generateContent on your account',
+        apiKeyValid: true,
+        allModels,
+        recommendation: 'Your student free plan may not include access to any text generation models. Try upgrading or check Google AI Studio for available models.'
+      });
+    }
+
+    const modelToTest = availableModels[0].name.split('/')[1]; // Extract model name
+    console.log(`Testing ${modelToTest}...`);
+
     const testResponse = await axios.post(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${modelToTest}:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
         contents: [
           {
@@ -36,12 +52,13 @@ router.get('/test-gemini', async (req, res) => {
       }
     );
 
-    console.log('gemini-1.5-flash works!');
+    console.log(`${modelToTest} works!`);
 
     res.json({
       status: 'success',
       apiKeyValid: true,
       availableModels,
+      testedModel: modelToTest,
       testResult: testResponse.data.candidates[0].content.parts[0].text
     });
 
