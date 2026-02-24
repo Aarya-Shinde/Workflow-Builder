@@ -33,14 +33,13 @@ async function callGemini(prompt, retries = 3, delay = 1000) {
       return response.data.candidates[0].content.parts[0].text;
 
     } catch (err) {
-      console.error("Gemini error:", err.response?.data || err.message);
-
-      if (err.response?.status === 429 && i < retries - 1) {
-        delay *= 2;
-        continue;
+        console.error("Gemini API Error:", {
+          status: err.response?.status,
+          data: err.response?.data,
+          message: err.message
+        });
+        throw err;
       }
-      throw err;
-    }
   }
 }
 

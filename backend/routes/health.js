@@ -17,22 +17,26 @@ router.get('/', async (req, res) => {
 
   // Check Gemini
   try {
-    await axios.post(
-      `https://generativelanguage.googleapis.com/v1beta/openai/chat/completions`,
+    const response = await axios.post(
+      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
-        model: 'gemini-2.5-flash',
-        messages: [{ role: 'user', content: 'hi' }],
-        max_tokens: 5
+        contents: [
+          {
+            parts: [{ text: 'hi' }]
+          }
+        ]
       },
       {
-        headers: {
-          'Authorization': `Bearer ${process.env.GEMINI_API_KEY}`,
-          'Content-Type': 'application/json'
-        }
+        headers: { "Content-Type": "application/json" }
       }
     );
     health.llm = 'ok';
   } catch (err) {
+    console.error('Gemini API Error:', {
+      status: err.response?.status,
+      data: err.response?.data,
+      message: err.message
+    });
     health.llm = 'error';
   }
 
