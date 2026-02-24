@@ -15,22 +15,26 @@ async function callGemini(prompt, retries = 3, delay = 1000) {
   for (let i = 0; i < retries; i++) {
     try {
       await new Promise(res => setTimeout(res, delay));
+
       const response = await axios.post(
-        'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
+        `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
         {
-          model: 'gemini-2.5-flash',
-          messages: [{ role: 'user', content: prompt }],
-          max_tokens: 1000
+          contents: [
+            {
+              parts: [{ text: prompt }]
+            }
+          ]
         },
         {
-          headers: {
-            'Authorization': `Bearer ${process.env.GEMINI_API_KEY}`,
-            'Content-Type': 'application/json'
-          }
+          headers: { "Content-Type": "application/json" }
         }
       );
-      return response.data.choices[0].message.content;
+
+      return response.data.candidates[0].content.parts[0].text;
+
     } catch (err) {
+      console.error("Gemini error:", err.response?.data || err.message);
+
       if (err.response?.status === 429 && i < retries - 1) {
         delay *= 2;
         continue;
