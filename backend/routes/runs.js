@@ -17,7 +17,7 @@ async function callGemini(prompt, retries = 3, delay = 1000) {
       await new Promise(res => setTimeout(res, delay));
 
       const response = await axios.post(
-        `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+        `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
         {
           contents: [
             {
@@ -33,13 +33,18 @@ async function callGemini(prompt, retries = 3, delay = 1000) {
       return response.data.candidates[0].content.parts[0].text;
 
     } catch (err) {
-        console.error("Gemini API Error:", {
-          status: err.response?.status,
-          data: err.response?.data,
-          message: err.message
-        });
-        throw err;
+      console.error("Gemini error:", {
+        status: err.response?.status,
+        data: err.response?.data,
+        message: err.message
+      });
+
+      if (err.response?.status === 429 && i < retries - 1) {
+        delay *= 2;
+        continue;
       }
+      throw err;
+    }
   }
 }
 
@@ -74,6 +79,7 @@ router.post('/execute', async (req, res) => {
 
     res.json({ run });
   } catch (err) {
+    console.error('Workflow execution error:', err.message);
     res.status(500).json({ error: 'Execution failed', details: err.message });
   }
 });
