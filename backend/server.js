@@ -14,9 +14,18 @@ app.use('/health', require('./routes/health'));
 app.use('/api/diagnostic', require('./routes/diagnostic'));
 
 // Connect to MongoDB
+if (!process.env.MONGODB_URI) {
+  console.error('Error: MONGODB_URI is not defined in environment variables.');
+  process.exit(1);
+}
+
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log('MongoDB error:', err));
+  .then(() => console.log('MongoDB connected successfully'))
+  .catch(err => {
+    console.error('MongoDB connection error:', err.message);
+    console.error('Make sure your MongoDB server is running and the MONGODB_URI is correct.');
+  });
+
 
 const PORT = process.env.PORT || 5000;
 
