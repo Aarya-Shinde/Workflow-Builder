@@ -51,11 +51,6 @@ export default function Dashboard() {
             <div style={{ width: 48, height: 48, borderRadius: 10, background: 'var(--color-cyan-dim)', border: '1px solid rgba(0,229,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Zap size={22} color="var(--color-cyan)" />
             </div>
-            <div>
-              <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--color-text-secondary)', marginBottom: 4 }}>Network Load</p>
-              <p style={{ fontSize: 26, fontWeight: 700 }}>14.2%</p>
-              <p style={{ fontSize: 12, color: 'var(--color-cyan)' }}>Optimal</p>
-            </div>
           </div>
         </section>
 
@@ -173,21 +168,6 @@ export default function Dashboard() {
               </p>
             </div>
           )}
-        </div>
-
-        {/* Neural Link Integrity */}
-        <div className="card" style={{ overflow: 'hidden', height: 220, position: 'relative' }}>
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(0,50,60,0.4), rgba(0,20,30,0.6)' }} />
-          <div style={{ position: 'absolute', inset: 0, padding: 32, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
-            <h3 style={{ fontWeight: 700, fontSize: 18, marginBottom: 12 }}>Neural Link Integrity</h3>
-            <div className="progress-track">
-              <div className="progress-fill" style={{ width: '88%' }} />
-            </div>
-            <div className="flex justify-between mt-3" style={{ fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
-              <span style={{ color: 'var(--color-text-secondary)' }}>Optimization Matrix</span>
-              <span style={{ color: 'var(--color-cyan)' }}>88% Synced</span>
-            </div>
-          </div>
         </div>
 
       </div>

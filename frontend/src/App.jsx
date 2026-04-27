@@ -28,8 +28,8 @@ function App() {
       <header className="app-header">
         <div className="header-inner">
           <div className="brand">
-            <div className="brand-icon">⚡</div>
-            <h1 className="brand-name">Abyssal Builder</h1>
+            <div className="brand-icon">A</div>
+            <h1 className="brand-name">Workflow Builder</h1>
           </div>
 
           {/* Desktop Nav */}
